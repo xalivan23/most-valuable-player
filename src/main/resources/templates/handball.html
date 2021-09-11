@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="an">
+<head>
+    <title th:text="${title}"></title>
+
+</head>
+<div th:insert="blocks/library::library"></div>
+<br>
+<br>
+<div class="container"><br>
+     <br>
+    <div class="row">
+        <div class="album col-md-12 bg-light" style="background-color: bisque">
+            <div class="row col-md-12">
+                <div class="col-md-4">
+                    <a href="/basketball" class="btn btn-info btn-lg btn-block" role="button">Basketball FORM</a>
+                    <br>
+                    <a href="/handball" class="btn btn-dark btn-lg btn-block" role="button">Handball FORM</a>
+                    <br>
+                    <a href="/" class="btn btn-info btn-lg btn-block" role="button">MAIN MENU</a>
+                    <br>
+
+                </div>
+
+                <div class="col-md-8">
+                    <h2 class="text-center text-success">Handball GAMES</h2>
+                    <table class="table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th><h6>playerName</h6></th>
+                            <th><h6>nickname</h6></th>
+                            <th><h6>numberPlayer</h6></th>
+                            <th><h6>teamName</h6></th>
+                            <th><h6>goalsMade</h6></th>
+                            <th><h6>goalsReceived</h6></th>
+                            <th><h6>numberGame</h6></th>
+                            <th><h6></h6></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr th:each="handballPlayer, el:${allHandballPlayers}" class="alert alert-info mt-2">
+
+                            <td><span th:text="${handballPlayer.playerName}"></span></td>
+                            <td><span th:text="${handballPlayer.nickname}"></span></td>
+                            <td><span th:text="${handballPlayer.numberPlayer}"></span></td>
+                            <td><span th:text="${handballPlayer.teamName}"></span></td>
+                            <td><span th:text="${handballPlayer.goalsMade}"></span></td>
+                            <td><span th:text="${handballPlayer.goalsReceived}"></span></td>
+                            <td><span th:text="${handballPlayer.numberGame}"></span></td>
+
+                            <td><a th:href="'/handball/'+${handballPlayer.idPlayer}+'/remove'"
+                                   class="btn btn-warning">REMOVE</a></td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+                    <h2 class="text-center text-success">Handball FORM </h2><br>
+                    <form action="/handball" method="post" >
+                        <table>
+
+                            <td><h1>
+                                <input type="text" name="playerName" class="form-control"
+                                       placeholder="playerName">
+                            </h1></td>
+                            <td><h1>
+                                <input type="text" name="nickname" class="form-control"
+                                       placeholder="nickname">
+                            </h1></td>
+                            <td><h1>
+                                <input type="text" name="numberPlayer" class="form-control"
+                                       placeholder="numberPlayer">
+                            </h1></td>
+
+                            <td><h1>
+                                <input type="text" name="teamName" class="form-control"
+                                       placeholder="teamName">
+                            </h1></td>
+                            <td><h1>
+                                <input type="text" name="goalsMade" class="form-control"
+                                       placeholder="goalsMade">
+                            </h1></td>
+                            <td><h1>
+                                <input type="text" name="goalsReceived" class="form-control"
+                                       placeholder="goalsReceived">
+                            </h1></td>
+                            <td><h1>
+                                <input type="text" name="numberGame" class="form-control"
+                                       placeholder="numberGame">
+                            </h1></td>
+
+                        </table>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">SAVE</button>
+
+                    </form>
+                </div>
+
+                <br>
+            </div>
+        </div>
+    </div>
+    <br><br>
+
+</div>
+
+
+<br>
+<br>
+</html>

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BasketBallRepository extends JpaRepository<BasketballPlayer, Long > {
+    BasketballPlayer findByIdPlayer(Long id);
 }

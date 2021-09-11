@@ -1,12 +1,10 @@
 package com.example.mostvaluableplayer.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+
 
 @Data
 @AllArgsConstructor
@@ -14,7 +12,7 @@ import java.util.Date;
 @Builder
 @Entity
 @Table(name = "player")
-public class Player extends Game {
+public class Player  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "player_id")
@@ -26,7 +24,9 @@ public class Player extends Game {
 
     int ratingPoints;
     int teamVictory;
-//    private String gameNameOfGame;
-//    private int numberPlayer;
+
+    private String nameOfGame;
+    private int numberPlayer;
+    private int numberGame;
 
 }

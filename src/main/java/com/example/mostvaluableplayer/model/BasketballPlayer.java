@@ -6,21 +6,15 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+//@Builder
 @Entity
 @Table(name = "basketball")
 public class BasketballPlayer extends Player {
     private int scoredPoint;
     private int rebound;
     private int assist;
-    //    String nickname;
-//    String teamName;
-//    int ratingPoints;
-//    int teamVictory;
-//    private String gameName;
-//    private int numberPlayer;
-
 }
