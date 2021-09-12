@@ -13,7 +13,7 @@ import java.util.*;
 
 @Service
 public class GameLogicService {
-    public int num = 0;
+    public static int num = 0;
     private final BasketBallRepository basketBallRepository;
     private final HandballRepository handballRepository;
     private final PlayerRepository playerRepository;
