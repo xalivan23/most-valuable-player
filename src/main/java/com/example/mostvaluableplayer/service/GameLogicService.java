@@ -6,17 +6,14 @@ import com.example.mostvaluableplayer.model.Player;
 import com.example.mostvaluableplayer.repository.BasketBallRepository;
 import com.example.mostvaluableplayer.repository.HandballRepository;
 import com.example.mostvaluableplayer.repository.PlayerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class GameLogicService {
+    public int num = 0;
     private final BasketBallRepository basketBallRepository;
     private final HandballRepository handballRepository;
     private final PlayerRepository playerRepository;
@@ -124,24 +121,61 @@ public class GameLogicService {
         return goalsMade * coefficientOfGoal + goalsReceived * coefficientOfReceived;
     }
 
-    public Player getMVP() {
-//        Optional<Player> all = playerRepository.findAllByNumberGame();
-//        List<Player> playerList = new ArrayList<>();
-//        all.ifPresent(playerList::add);
-//        playerList.sort(Comparator.comparing(Player::getNumberGame));
-//
-//        playerList.size();
+    public Long getMVP() {
+        List<Player> number = playerRepository.findAll();
+        number.sort(Comparator.comparing(Player::getNumberGame).reversed());
+        int numberGame = number.get(0).getNumberGame();
 
-//        playerList.stream()
-//                .sorted()
-//                .map()
+        for (int i = 1; i < numberGame + 1; i++) {
+            List<Player> a = playerRepository.findAllByNumberGameAndTeamName(i, "A");
+            List<Player> b = playerRepository.findAllByNumberGameAndTeamName(i, "B");
+            int sumA = a.stream().mapToInt(Player::getRatingPoints).sum();
+            int sumB = b.stream().mapToInt(Player::getRatingPoints).sum();
+            if (sumA > sumB) {
+                for (int j = 0; j < 3; j++) {
+                    Long idPlayer = a.get(j).getIdPlayer();
+                    Player player = playerRepository.findByIdPlayer(idPlayer).orElseThrow(null);
+                    player.setTeamVictory(10);
+                    playerRepository.save(player);
+                }
+            } else {
+                for (int j = 0; j < 3; j++) {
+                    Long idPlayer = b.get(j).getIdPlayer();
+                    Player player = playerRepository.findByIdPlayer(idPlayer).orElseThrow(null);
+                    player.setTeamVictory(10);
+                    playerRepository.save(player);
+                }
+            }
+        }
+        return best();
+    }
 
-//        Player player = playerList.get(0);
-//        int numberGame = all.get().getNumberGame();
+    private Long best() {
+        List<Player> all = playerRepository.findAll();
+        Map<Long, Integer> map = new TreeMap<>();
 
-//handballRepository.findAllByNumberGame();
 
-        return null;
+        for (int i = 0; i < all.size(); i++) {
+            Long kay = all.get(i).getIdPlayer();
+            int value = all.get(i).getRatingPoints() + all.get(i).getTeamVictory();
+            map.put(kay, value);
+        }
+        Long key = map.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey();
+
+        Integer value = map.entrySet()
+                .stream()
+                .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
+                .get()
+                .getValue();
+
+        num = value;
+        return key;
+    }
+
+
+    public Optional<Player> getPlayer(Long id) {
+        Optional<Player> byId = playerRepository.findById(id);
+        return byId;
     }
 
 }

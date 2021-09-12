@@ -10,7 +10,6 @@ import javax.persistence.Table;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
 @Entity
 @Table(name = "basketball")
 public class BasketballPlayer extends Player {

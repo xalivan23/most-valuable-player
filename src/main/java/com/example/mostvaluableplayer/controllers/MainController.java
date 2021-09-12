@@ -2,6 +2,7 @@ package com.example.mostvaluableplayer.controllers;
 
 import com.example.mostvaluableplayer.model.BasketballPlayer;
 import com.example.mostvaluableplayer.model.HandballPlayer;
+import com.example.mostvaluableplayer.model.Player;
 import com.example.mostvaluableplayer.repository.BasketBallRepository;
 import com.example.mostvaluableplayer.repository.HandballRepository;
 import com.example.mostvaluableplayer.service.GameLogicService;
@@ -13,10 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class MainController {
@@ -28,7 +26,6 @@ public class MainController {
 
     @GetMapping("/")
     public String home(Model model) {
-        System.out.println("111");
         model.addAttribute("title", "main page");
         return "main-page";
     }
@@ -105,6 +102,14 @@ public class MainController {
 
     @GetMapping("/mvp")
     public String mvp(Model model) {
+        Long idPlayer = gameLogicService.getMVP();
+        Optional<Player> player = gameLogicService.getPlayer(idPlayer);
+        List<Player>playerList=new ArrayList<>();
+        player.ifPresent(playerList::add);
+
+        int num = gameLogicService.num;
+        model.addAttribute("playerList",playerList);
+        model.addAttribute("num",num);
 
         return "mvp";
     }

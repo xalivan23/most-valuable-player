@@ -10,6 +10,10 @@ import java.util.Optional;
 @EnableJpaRepositories
 @Repository
 public interface PlayerRepository extends JpaRepository<Player,Long> {
-    Optional<Player> findAllByNumberGame(int numberGame);
+    List<Player> findAllByNumberGame(int numberGame);
+    List<Player> findAllByNumberGameAndTeamName(int numberName, String teamName);
+    Optional<Player> findByIdPlayer(Long idPlayer);
 
+
+    Optional<Player> findAllByIdPlayer(Long idPlayer);
 }

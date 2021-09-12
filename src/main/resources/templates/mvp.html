@@ -1,11 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html" lang="an">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="${title}"></title>
+
 </head>
-<body>
+<div th:insert="blocks/library::library"></div>
+<br>
+<br>
+<div class="container"><br>
+    <h2 class="text-center" style="color: #17859b">Most Valuable Player</h2>
+    <br>
+    <div class="row">
+        <div class="album col-md-12 bg-light" style="background-color: bisque">
+            <div class="row col-md-12">
+                <div class="col-md-4">
+                    <a href="/basketball" class="btn btn-info btn-lg btn-block" role="button">Basketball FORM</a>
+                    <br>
+                    <a href="/handball" class="btn btn-info btn-lg btn-block" role="button">Handball FORM</a>
+                    <br>
+                    <a href="/mvp" class="btn btn-warning btn-lg btn-block" role="button">Most Valuable Player
+                    </a>
+                    <br>
+
+                </div>
+                <div class="col-md-8">
+                    <table class="table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th><h2>playerName</h2></th>
+                            <th><h2>nickname</h2></th>
+                            <th><h2>ratingPoints</h2></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="player, el:${playerList}" class="alert alert-info mt-2">
+                            <td><span th:text="${player.playerName}"></span></td>
+                            <td><span th:text="${player.nickname}"></span></td>
+                            <td><span th:text="${num}"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <img src="img/top.jpg" class="img-thumbnail" alt="100" width="100%" height="100">
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+    <br><br>
+
+</div>
 
 
-</body>
+<br>
+<br>
 </html>
