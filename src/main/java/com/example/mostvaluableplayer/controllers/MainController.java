@@ -110,7 +110,7 @@ public class MainController {
         int num = gameLogicService.num;
         model.addAttribute("playerList",playerList);
         model.addAttribute("num",num);
-
+        model.addAttribute("title", "mvp");
         return "mvp";
     }
 
