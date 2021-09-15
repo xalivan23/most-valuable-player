@@ -16,11 +16,11 @@ public class Player  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "player_id")
-    private Long idPlayer;
+    private Integer idPlayer;
 
-    String playerName;
-    String nickname;
-    String teamName;
+    private String playerName;
+    private String nickname;
+    private String teamName;
 
     int ratingPoints;
     int teamVictory;

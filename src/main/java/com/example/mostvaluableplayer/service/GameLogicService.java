@@ -17,19 +17,20 @@ public class GameLogicService {
     private final BasketBallRepository basketBallRepository;
     private final HandballRepository handballRepository;
     private final PlayerRepository playerRepository;
-
+    String basket = "BASKETBALL";
+    String handball = "HANDBALL";
     public GameLogicService(BasketBallRepository basketBallRepository, HandballRepository handballRepository, PlayerRepository playerRepository) {
         this.basketBallRepository = basketBallRepository;
         this.handballRepository = handballRepository;
         this.playerRepository = playerRepository;
     }
 
-    public List<HandballPlayer> getAllHandballPlayers() {
-        return handballRepository.findAll();
+    public List<Player> getAllHandballPlayers() {
+        return playerRepository.findAllByNameOfGame(handball);
     }
 
     public List<BasketballPlayer> getAllBasketballPlayers() {
-        return basketBallRepository.findAll();
+        return basketBallRepository.findAllByNameOfGame(basket);
     }
 
     public void setHandballGame(@RequestParam("playerName") String playerName,
@@ -57,14 +58,15 @@ public class GameLogicService {
         handballPlayer.setRatingPoints(ratingPoints);
         handballPlayer.setTeamVictory(teamVictory);
         handballPlayer.setNumberGame(numberGame);
-
-        String handball = "Handball";
+//        String basket = "BASKETBALL";
+//        String handball = "HANDBALL";
+        String handball = "HANDBALL";
         handballPlayer.setNameOfGame(handball);
 
         handballRepository.save(handballPlayer);
     }
 
-    public void RemoveHandballGame(Long id) {
+    public void RemoveHandballGame(Integer id) {
         HandballPlayer byIdPlayer = handballRepository.findByIdPlayer(id);
         handballRepository.delete(byIdPlayer);
     }
@@ -97,50 +99,50 @@ public class GameLogicService {
         basketballPlayer.setTeamVictory(teamVictory);
         basketballPlayer.setNumberGame(numberGame);
 
-        String basketball = "Basketball";
+        String basketball = "BASKETBALL";
         basketballPlayer.setNameOfGame(basketball);
 
         basketBallRepository.save(basketballPlayer);
     }
 
-    public void RemoveBasketballGame(Long id) {
+    public void RemoveBasketballGame(Integer id) {
         BasketballPlayer byIdPlayer = basketBallRepository.findByIdPlayer(id);
         basketBallRepository.delete(byIdPlayer);
     }
 
-    private int BasketballRatingPoints(int scoredPoint, int rebound, int assist) {
+    public int BasketballRatingPoints(int scoredPoint, int rebound, int assist) {
         int coefficientOf_ScoredPoint = 2;
         int coefficientOf_Rebound = 1;
         int coefficientOf_Assist = 1;
         return scoredPoint * coefficientOf_ScoredPoint + rebound * coefficientOf_Rebound + assist * coefficientOf_Assist;
     }
 
-    private int HandballRatingPoints(int goalsMade, int goalsReceived) {
+    public int HandballRatingPoints(int goalsMade, int goalsReceived) {
         int coefficientOfGoal = 2;
         int coefficientOfReceived = -1;
         return goalsMade * coefficientOfGoal + goalsReceived * coefficientOfReceived;
     }
 
-    public Long getMVP() {
+    public Integer getMVP() {
         List<Player> number = playerRepository.findAll();
         number.sort(Comparator.comparing(Player::getNumberGame).reversed());
         int numberGame = number.get(0).getNumberGame();
 
         for (int i = 1; i < numberGame + 1; i++) {
-            List<Player> a = playerRepository.findAllByNumberGameAndTeamName(i, "A");
-            List<Player> b = playerRepository.findAllByNumberGameAndTeamName(i, "B");
+            List<Player> a = playerRepository.findAllByNumberGameAndTeamName(i, "Team A");
+            List<Player> b = playerRepository.findAllByNumberGameAndTeamName(i, "Team B");
             int sumA = a.stream().mapToInt(Player::getRatingPoints).sum();
             int sumB = b.stream().mapToInt(Player::getRatingPoints).sum();
             if (sumA > sumB) {
                 for (int j = 0; j < 3; j++) {
-                    Long idPlayer = a.get(j).getIdPlayer();
+                    Integer idPlayer = a.get(j).getIdPlayer();
                     Player player = playerRepository.findByIdPlayer(idPlayer).orElseThrow(null);
                     player.setTeamVictory(10);
                     playerRepository.save(player);
                 }
             } else {
                 for (int j = 0; j < 3; j++) {
-                    Long idPlayer = b.get(j).getIdPlayer();
+                    Integer idPlayer = b.get(j).getIdPlayer();
                     Player player = playerRepository.findByIdPlayer(idPlayer).orElseThrow(null);
                     player.setTeamVictory(10);
                     playerRepository.save(player);
@@ -150,17 +152,17 @@ public class GameLogicService {
         return best();
     }
 
-    private Long best() {
+    private Integer best() {
         List<Player> all = playerRepository.findAll();
-        Map<Long, Integer> map = new TreeMap<>();
+        Map<Integer, Integer> map = new TreeMap<>();
 
 
         for (int i = 0; i < all.size(); i++) {
-            Long kay = all.get(i).getIdPlayer();
+            Integer kay = all.get(i).getIdPlayer();
             int value = all.get(i).getRatingPoints() + all.get(i).getTeamVictory();
             map.put(kay, value);
         }
-        Long key = map.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey();
+        Integer key = Math.toIntExact(map.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey());
 
         Integer value = map.entrySet()
                 .stream()
@@ -173,7 +175,7 @@ public class GameLogicService {
     }
 
 
-    public Optional<Player> getPlayer(Long id) {
+    public Optional<Player> getPlayer(Integer id) {
         Optional<Player> byId = playerRepository.findById(id);
         return byId;
     }

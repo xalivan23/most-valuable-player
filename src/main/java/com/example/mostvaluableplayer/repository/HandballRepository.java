@@ -7,9 +7,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface HandballRepository extends JpaRepository<HandballPlayer, Long> {
+public interface HandballRepository extends JpaRepository<HandballPlayer, Integer> {
 
-    HandballPlayer findByIdPlayer(Long id);
+    HandballPlayer findByIdPlayer(Integer id);
 
    List<HandballPlayer> findAllByNumberGame(int numberGame);
 }

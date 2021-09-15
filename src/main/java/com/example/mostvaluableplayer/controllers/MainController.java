@@ -5,23 +5,30 @@ import com.example.mostvaluableplayer.model.HandballPlayer;
 import com.example.mostvaluableplayer.model.Player;
 import com.example.mostvaluableplayer.repository.BasketBallRepository;
 import com.example.mostvaluableplayer.repository.HandballRepository;
+import com.example.mostvaluableplayer.service.CSVMappedToJavaBean;
 import com.example.mostvaluableplayer.service.GameLogicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
+
+import org.springframework.transaction.annotation.Transactional;
 
 @Controller
 public class MainController {
     private final GameLogicService gameLogicService;
+    private final CSVMappedToJavaBean csvMappedToJavaBean;
 
-    public MainController(GameLogicService gameLogicService) {
+    public MainController(GameLogicService gameLogicService, CSVMappedToJavaBean csvMappedToJavaBean) {
         this.gameLogicService = gameLogicService;
+        this.csvMappedToJavaBean = csvMappedToJavaBean;
     }
 
     @GetMapping("/")
@@ -32,7 +39,7 @@ public class MainController {
 
     @GetMapping("/handball")
     public String handball(Model model) {
-        List<HandballPlayer> allHandballPlayers = gameLogicService.getAllHandballPlayers();
+        List<Player> allHandballPlayers = gameLogicService.getAllHandballPlayers();
         model.addAttribute("allHandballPlayers", allHandballPlayers);
         return "handball";
     }
@@ -50,14 +57,14 @@ public class MainController {
 
                                      @RequestParam("numberGame") int numberGame) {
         gameLogicService.setHandballGame(playerName, nickname, numberPlayer, teamName, goalsMade, goalsReceived, numberGame);
-        List<HandballPlayer> allHandballPlayers = gameLogicService.getAllHandballPlayers();
+        List<Player> allHandballPlayers = gameLogicService.getAllHandballPlayers();
         model.addAttribute("allHandballPlayers", allHandballPlayers);
 
         return "handball";
     }
 
     @GetMapping("/handball/{idPlayer}/remove")
-    public String handballRemove(@PathVariable(value = "idPlayer") Long idPlayer, Model model) {
+    public String handballRemove(@PathVariable(value = "idPlayer") Integer idPlayer, Model model) {
         gameLogicService.RemoveHandballGame(idPlayer);
         return "redirect:/handball";
     }
@@ -94,7 +101,7 @@ public class MainController {
     }
 
     @GetMapping("/basketball/{idPlayer}/remove")
-    public String basketballRemove(@PathVariable(value = "idPlayer") Long idPlayer, Model model) {
+    public String basketballRemove(@PathVariable(value = "idPlayer") Integer idPlayer, Model model) {
         gameLogicService.RemoveBasketballGame(idPlayer);
         return "redirect:/basketball";
     }
@@ -102,16 +109,40 @@ public class MainController {
 
     @GetMapping("/mvp")
     public String mvp(Model model) {
-        Long idPlayer = gameLogicService.getMVP();
+        Integer idPlayer = gameLogicService.getMVP();
         Optional<Player> player = gameLogicService.getPlayer(idPlayer);
-        List<Player>playerList=new ArrayList<>();
+        List<Player> playerList = new ArrayList<>();
         player.ifPresent(playerList::add);
 
         int num = gameLogicService.num;
-        model.addAttribute("playerList",playerList);
-        model.addAttribute("num",num);
+        model.addAttribute("playerList", playerList);
+        model.addAttribute("num", num);
         model.addAttribute("title", "mvp");
         return "mvp";
+    }
+
+    @PostMapping("/load-file-system")
+    @Transactional
+    public String handleFileUpload(
+            @RequestParam("file") MultipartFile file) throws IOException {
+        String name = "C:\\FATHER\\SKAI\\most-valuable-player\\src\\main\\resources\\files\\";
+        if (!file.isEmpty()) {
+
+            byte[] bytes = file.getBytes();
+            BufferedOutputStream stream =
+                    new BufferedOutputStream(new FileOutputStream(new File(name + file.getOriginalFilename())));
+            stream.write(bytes);
+            stream.close();
+
+            String URL = name + file.getOriginalFilename();
+
+            System.out.println(URL);
+            csvMappedToJavaBean.fileSender(URL);
+            return "redirect:/";
+
+        } else {
+            return "redirect:/mvp";
+        }
     }
 
 }
