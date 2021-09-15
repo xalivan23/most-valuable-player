@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class GameLogicService {
@@ -156,15 +157,14 @@ public class GameLogicService {
         List<Player> all = playerRepository.findAll();
         Map<Integer, Integer> map = new TreeMap<>();
 
-
         for (int i = 0; i < all.size(); i++) {
-            Integer kay = all.get(i).getIdPlayer();
+            int kay = all.get(i).getIdPlayer();
             int value = all.get(i).getRatingPoints() + all.get(i).getTeamVictory();
             map.put(kay, value);
         }
-        Integer key = Math.toIntExact(map.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey());
+        int key = Math.toIntExact(map.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getKey());
 
-        Integer value = map.entrySet()
+        int value = map.entrySet()
                 .stream()
                 .max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1)
                 .get()

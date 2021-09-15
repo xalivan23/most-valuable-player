@@ -16,5 +16,6 @@ public interface PlayerRepository extends JpaRepository<Player,Integer> {
     Optional<Player> findByIdPlayer(int idPlayer);
     List<Player> findAllByNameOfGame(String nameOfGame);
 
+
     Optional<Player> findAllByIdPlayer(int idPlayer);
 }

@@ -109,7 +109,7 @@ public class CSVMappedToJavaBean {
                 player.setNumberPlayer(((Player) object).getNumberPlayer());
                 player.setTeamName(((Player) object).getTeamName());
                 player.setNameOfGame(handball);
-                player.setNumberGame(1);
+                player.setNumberGame(2);
 //                "goalsMade", "goalsReceived"
                 player.setGoalsMade(((HandballPlayer) object).getGoalsMade());
                 player.setGoalsReceived(((HandballPlayer) object).getGoalsReceived());
