@@ -114,9 +114,9 @@ public class MainController {
         List<Player> playerList = new ArrayList<>();
         player.ifPresent(playerList::add);
 
-        int num = gameLogicService.num;
+//        int num = gameLogicService.num;
         model.addAttribute("playerList", playerList);
-        model.addAttribute("num", num);
+//        model.addAttribute("num", num);
         model.addAttribute("title", "mvp");
         return "mvp";
     }
