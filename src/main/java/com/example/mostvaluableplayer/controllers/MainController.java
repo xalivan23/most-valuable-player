@@ -1,13 +1,11 @@
 package com.example.mostvaluableplayer.controllers;
 
 import com.example.mostvaluableplayer.model.BasketballPlayer;
-import com.example.mostvaluableplayer.model.HandballPlayer;
+
 import com.example.mostvaluableplayer.model.Player;
-import com.example.mostvaluableplayer.repository.BasketBallRepository;
-import com.example.mostvaluableplayer.repository.HandballRepository;
-import com.example.mostvaluableplayer.service.CSVMappedToJavaBean;
+
+import com.example.mostvaluableplayer.service.Factory;
 import com.example.mostvaluableplayer.service.GameLogicService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Controller
 public class MainController {
     private final GameLogicService gameLogicService;
-    private final CSVMappedToJavaBean csvMappedToJavaBean;
+    //    private final CSVMappedToJavaBean csvMappedToJavaBean;
+    private final Factory factory;
 
-    public MainController(GameLogicService gameLogicService, CSVMappedToJavaBean csvMappedToJavaBean) {
+    public MainController(GameLogicService gameLogicService, Factory factory) {
         this.gameLogicService = gameLogicService;
-        this.csvMappedToJavaBean = csvMappedToJavaBean;
+        this.factory = factory;
     }
 
     @GetMapping("/")
@@ -137,7 +136,7 @@ public class MainController {
             String URL = name + file.getOriginalFilename();
 
             System.out.println(URL);
-            csvMappedToJavaBean.fileSender(URL);
+            factory.getPlayerGame(URL); //Factory
             return "redirect:/";
 
         } else {
